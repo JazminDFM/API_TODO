@@ -2,9 +2,12 @@ require("dotenv").config();
 
 const express = require("express");
 const {json} = require("body-parser");
+const cors = require("cors");
 const {tareas, crearTarea, borrarTarea, toggleEstado, editarTexto} = require("./db");
 
 const servidor = express();
+
+servidor.use(cors());
 
 servidor.use(json());
 
@@ -52,7 +55,7 @@ servidor.delete("/tareas/borrar/:id([0-9]+)", async (peticion, respuesta) => {
     }
 });
 
-servidor.put("/tareas/actualizar/:id([0-9]+)/:operacion([1-2]+)", async (peticion, respuesta, siguiente) => {
+servidor.put("/tareas/actualizar/:id([0-9]+)/:operacion(1|2)", async (peticion, respuesta, siguiente) => {
     if(peticion.params.operacion == 1){
         if(!peticion.body.tarea || peticion.body.tarea.trim() == ""){
             return siguiente(true);
